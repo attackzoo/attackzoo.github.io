@@ -109,18 +109,6 @@
       <figcaption>Arquitetura do AttackZoo. A especificação declarativa (à esquerda) fica separada da orquestração: um ataque novo entra no repositório sem alterar as etapas seguintes. Os alvos podem ser contêineres, serviços do hospedeiro ou dispositivos reais incluídos de propósito na rede de laboratório.</figcaption>
     </figure>
 
-    <figure class="lab" id="lab">
-      <canvas id="labCanvas" aria-label="Painel animado de uma execução do AttackZoo: as fases de aquecimento, ataque e resfriamento avançam, a captura cresce e as sondas registram a disponibilidade do serviço-alvo." role="img"></canvas>
-      <div class="lab-hud" aria-live="polite">
-        <div class="hud-cell"><span class="hud-k">Ataque</span><span class="hud-v mono" id="hudAttack">dos_syn_flood</span></div>
-        <div class="hud-cell"><span class="hud-k">Família</span><span class="hud-v" id="hudFamily">Negação de serviço</span></div>
-        <div class="hud-cell"><span class="hud-k">Fase</span><span class="hud-v" id="hudPhase">aquecimento</span></div>
-        <div class="hud-cell"><span class="hud-k">Relógio do experimento</span><span class="hud-v mono" id="hudClock">00:00 / 04:00</span></div>
-        <div class="hud-cell"><span class="hud-k">Sondas com resposta</span><span class="hud-v mono" id="hudPkts">100%</span></div>
-        <button class="hud-btn" id="labPause" type="button" aria-pressed="false">Pausar animação</button>
-      </div>
-      <figcaption>O que o AttackZoo registra em cada execução, acelerado 12 vezes: 60 s de aquecimento, 120 s de ataque e 60 s de resfriamento, com sondas de disponibilidade a cada 0,5 s. Cada execução vira uma série temporal rotulada por fase. Simulação ilustrativa; as cores seguem as famílias do catálogo.</figcaption>
-    </figure>
   </div>
 
   <div class="wrap people">
@@ -611,7 +599,6 @@ python attackzoo.py dataset</code></pre>
 </footer>
 
 <script src="assets/js/data.js"></script>
-<script src="assets/js/lab.js"></script>
 <script src="assets/js/site.js"></script>
 </body>
 </html>
