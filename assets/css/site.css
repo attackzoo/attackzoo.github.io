@@ -179,8 +179,8 @@ em { font-style: italic; }
 
 /* Camadas de evidência */
 .layers { list-style: none; padding: 0; margin: 0 0 24px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; counter-reset: l; }
-.layers li { position: relative; padding: 22px 26px 22px 0; border-top: 6px solid var(--c); margin-right: 26px; }
-.layers li:not(:last-child)::after { content: ""; position: absolute; right: -22px; top: 30px; width: 14px; height: 14px; border-top: 2px solid var(--ink-3); border-right: 2px solid var(--ink-3); transform: rotate(45deg); }
+.layers li { position: relative; padding: 22px 8px 22px 0; border-top: 6px solid var(--c); margin-right: 44px; }
+.layers li:not(:last-child)::after { content: ""; position: absolute; right: -30px; top: 32px; width: 14px; height: 14px; border-top: 2px solid var(--ink-3); border-right: 2px solid var(--ink-3); transform: rotate(45deg); }
 .layers p { font-size: 1.02rem; }
 .layers code { font-size: .78rem; background: var(--card); }
 @media (max-width: 800px) { .layers { grid-template-columns: 1fr; } .layers li { margin-right: 0; } .layers li::after { display: none; } }
