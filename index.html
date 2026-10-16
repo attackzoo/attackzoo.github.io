@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AttackZoo | Qualificação de Leonardo Bitzki</title>
+<meta name="description" content="AttackZoo: um testbed reprodutível e extensível para experimentação com ataques de rede. Site de apoio ao exame de qualificação de Leonardo de Jesus Bitzki (PPGES/UNIPAMPA).">
+<meta property="og:title" content="AttackZoo: um testbed reprodutível e extensível para experimentação com ataques de rede">
+<meta property="og:description" content="60 ataques em contêineres, 1.200 capturas, 220,4 GB de dados derivados e três frentes de análise: transferência, detecção e atributos.">
+<meta name="theme-color" content="#0C2733">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230C2733'/%3E%3Crect x='6' y='8' width='8' height='16' rx='2' fill='none' stroke='%23E2A019' stroke-width='2'/%3E%3Crect x='18' y='8' width='8' height='16' rx='2' fill='none' stroke='%23CFE3EA' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='2' fill='%23E2A019'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/css/site.css">
+<script>
+  try { var t = localStorage.getItem('az-theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+</script>
+</head>
+<body>
+<a class="skip" href="#conteudo">Pular para o conteúdo</a>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="#topo" aria-label="AttackZoo, início">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="5" y="7" width="9" height="18" rx="2"/><rect x="18" y="7" width="9" height="18" rx="2"/><circle cx="16" cy="16" r="2.4"/></svg>
+      AttackZoo
+    </a>
+    <nav class="nav" aria-label="Seções">
+      <a href="#problema">Problema</a>
+      <a href="#percurso">Percurso</a>
+      <a href="#como-funciona">Como funciona</a>
+      <a href="#catalogo">Catálogo</a>
+      <a href="#campanha">Campanha</a>
+      <a href="#frentes">Frentes</a>
+      <a href="#questoes">Questões</a>
+      <a href="#cronograma">Cronograma</a>
+      <a href="#materiais">Materiais</a>
+    </nav>
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="Alternar tema claro ou escuro">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="conteudo">
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="topo">
+  <div class="wrap hero-head">
+    <p class="kicker">Exame de qualificação de mestrado, PPGES/UNIPAMPA, 2026</p>
+    <h1 class="hero-title">AttackZoo</h1>
+    <p class="hero-sub">Um <em>testbed</em> reprodutível e extensível para experimentação com ataques de rede.</p>
+    <p class="hero-lede">Cada ataque vive no seu próprio contêiner, como um animal no seu recinto. O AttackZoo solta um de cada vez contra serviços de laboratório, grava todo o tráfego e transforma cada execução em evidência rastreável: capturas, registros, atributos e conjuntos de dados que qualquer pessoa pode regenerar.</p>
+  </div>
+
+  <div class="wrap">
+    <figure class="lab" id="lab">
+      <canvas id="labCanvas" aria-label="Animação de um experimento do AttackZoo: contêineres atacantes enviam pacotes pela ponte Docker aos serviços-alvo, enquanto o tcpdump grava a captura e as sondas medem a disponibilidade." role="img"></canvas>
+      <div class="lab-hud" aria-live="polite">
+        <div class="hud-cell"><span class="hud-k">Ataque</span><span class="hud-v mono" id="hudAttack">dos_syn_flood</span></div>
+        <div class="hud-cell"><span class="hud-k">Família</span><span class="hud-v" id="hudFamily">Negação de serviço</span></div>
+        <div class="hud-cell"><span class="hud-k">Fase</span><span class="hud-v" id="hudPhase">aquecimento</span></div>
+        <div class="hud-cell"><span class="hud-k">Relógio do experimento</span><span class="hud-v mono" id="hudClock">00:00 / 04:00</span></div>
+        <div class="hud-cell"><span class="hud-k">Pacotes no pcap</span><span class="hud-v mono" id="hudPkts">0</span></div>
+        <button class="hud-btn" id="labPause" type="button" aria-pressed="false">Pausar animação</button>
+      </div>
+      <figcaption>Simulação ilustrativa do ciclo real do AttackZoo, acelerada 12 vezes: 60 s de aquecimento, 120 s de ataque e 60 s de resfriamento, com sondas de disponibilidade a cada 0,5 s. As cores seguem as sete famílias do catálogo.</figcaption>
+    </figure>
+  </div>
+
+  <div class="wrap people">
+    <dl>
+      <div><dt>Mestrando</dt><dd>Leonardo de Jesus Bitzki</dd></div>
+      <div><dt>Orientador</dt><dd>Prof. Dr. Diego Kreutz (UNIPAMPA)</dd></div>
+      <div><dt>Coorientador</dt><dd>Prof. Dr. Leandro Márcio Bertholdo (UFRGS)</dd></div>
+      <div><dt>Programa</dt><dd>Pós-Graduação em Engenharia de Software, UNIPAMPA</dd></div>
+    </dl>
+  </div>
+
+  <div class="wrap">
+    <ul class="facts" aria-label="Números do trabalho">
+      <li><b>60</b><span>ataques em contêineres, em 7 famílias</span></li>
+      <li><b>9</b><span>serviços-alvo, de SSH a Zenoh</span></li>
+      <li><b>35 / 9</b><span>técnicas e táticas do MITRE ATT&amp;CK</span></li>
+      <li><b>1.200</b><span>capturas de tráfego na campanha</span></li>
+      <li><b>220,4 GB</b><span>de conjuntos de dados derivados, públicos</span></li>
+      <li><b>0,59%</b><span>de variação mediana entre repetições</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ PROBLEMA ============ -->
+<section class="sec" id="problema">
+  <div class="wrap grid-2">
+    <div class="prose">
+      <h2>O problema: dados de ataque que ninguém consegue regenerar</h2>
+      <p>Para avaliar um sistema de detecção de intrusão, é preciso tráfego com ataques. A maior parte da literatura usa coleções estáticas, como NSL-KDD, UNSW-NB15 e CICIDS2017: registros de um ambiente e de uma época. Quando serviços, protocolos e estratégias de ataque mudam, essas coleções envelhecem, e sem o processo que as gerou não há como produzir uma versão nova.</p>
+      <p>Os <em>testbeds</em>, ambientes controlados para executar ataques, deveriam resolver isso. Mas, na comparação de onze trabalhos relacionados, a mediana foi de <strong>quatro ataques demonstrados por trabalho</strong>, e cinco deles não tinham repositório público de artefatos.</p>
+      <blockquote class="question">Como construir um <em>testbed</em> que permita executar ataques de rede de forma reprodutível e extensível, e em que medida as evidências que ele produz são úteis para caracterizar ataques e avaliar detecção, e transferíveis para outros ambientes?</blockquote>
+      <p class="note">Pergunta central da dissertação.</p>
+    </div>
+    <figure class="chart-fig">
+      <div class="bars" id="testbedBars" role="img" aria-label="Número de ataques demonstrados por testbed: onze trabalhos relacionados entre 1 e 19 ataques, mediana de 4; AttackZoo com 60."></div>
+      <figcaption>Ataques demonstrados por <em>testbed</em>. O asterisco indica quantidade inferida das demonstrações, pois o trabalho não a informa. A linha marca a mediana dos relacionados (4). Fonte: Bitzki et al., SBSeg 2026.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ CONCEITOS ============ -->
+<section class="sec sec-tint" id="evidencia">
+  <div class="wrap">
+    <h2>Três camadas de evidência</h2>
+    <p class="lead">A ideia que organiza todo o trabalho: separar o que foi registrado do que foi calculado e do que foi concluído. Assim, uma análise pode ser refeita a partir dos registros preservados, sem repetir o experimento, e um experimento pode ser repetido sem herdar as decisões analíticas anteriores.</p>
+    <ol class="layers">
+      <li style="--c:var(--signal)">
+        <h3>Evidência bruta</h3>
+        <p>O que aconteceu, preservado sem transformação: captura de pacotes (pcap), registros dos serviços, amostras das sondas e telemetria de hospedeiro e contêiner.</p>
+        <code>run03/dos_syn_flood_L3.pcap</code>
+      </li>
+      <li style="--c:var(--f1)">
+        <h3>Evidência derivada</h3>
+        <p>Representações calculadas a partir dos registros: atributos de pacote e de fluxo extraídos por TShark, Scapy e NTLFlowLyzer, em trilhas separadas.</p>
+        <code>frame.len, flow_duration, fwd_iat_std…</code>
+      </li>
+      <li style="--c:var(--f7)">
+        <h3>Interpretação</h3>
+        <p>Conclusões obtidas com critérios declarados, como "este padrão de tráfego caracteriza inundações TCP" ou "este alerta corresponde a este ataque".</p>
+        <code>sinal presente, detecção ausente</code>
+      </li>
+    </ol>
+    <p class="note">Reprodutibilidade e fidelidade não se implicam: um procedimento pode ser repetido com variação mínima e, ainda assim, não reproduzir interferência sem fio, filas de hardware ou latência de longa distância. Por isso o trabalho mede as duas separadamente.</p>
+  </div>
+</section>
+
+<!-- ============ PERCURSO ============ -->
+<section class="sec" id="percurso">
+  <div class="wrap">
+    <h2>O percurso: três artigos encadeados e três frentes em andamento</h2>
+    <p class="lead">A qualificação é um compilado de artigos. Cada estudo nasceu de uma limitação do anterior: a escolha de um gateway para uma rede real de IoT pediu tráfego realista; o tráfego realista pediu um <em>testbed</em>; o <em>testbed</em> pediu uma campanha em escala; e a campanha abriu as perguntas que as frentes A, B e C respondem agora.</p>
+
+    <ol class="track">
+      <li class="track-step done">
+        <span class="step-n">1</span>
+        <div>
+          <p class="venue">ERRC 2025</p>
+          <h3>Qual gateway para a rede IoT do campus?</h3>
+          <p>No GT-IoTEdu da RNP, foram comparados pfSense, OPNsense, PacketFence e Sophos XG, em desempenho, funcionalidades, licenciamento e API. O <strong>pfSense</strong> teve o melhor equilíbrio: 2.937 Mb/s no iperf, contra 2.641 Mb/s do OPNsense, com cerca de metade da memória (467,5 MB contra 887,8 MB). Ele integra <strong>Snort, Suricata e Zeek</strong>, os três detectores avaliados depois na frente B.</p>
+          <p class="answers">Responde à QP1</p>
+        </div>
+      </li>
+      <li class="track-step done">
+        <span class="step-n">2</span>
+        <div>
+          <p class="venue">SBCUP 2026 (publicado como NetSecBed)</p>
+          <h3>Como construir o <em>testbed</em>?</h3>
+          <p>A arquitetura separa a descrição declarativa do ataque da orquestração que o executa. Novos ataques entram sem tocar no núcleo. Um SYN flood repetido 20 vezes variou só 2,11 linhas em 1.671 (desvio padrão), e o orquestrador foi de 1 a 60 atacantes simultâneos com memória estável em torno de 24 MB.</p>
+          <p class="answers">Responde à QP2</p>
+        </div>
+      </li>
+      <li class="track-step done">
+        <span class="step-n">3</span>
+        <div>
+          <p class="venue">SBSeg 2026, Salão de Ferramentas</p>
+          <h3>Ele aguenta o catálogo inteiro?</h3>
+          <p>Sim: 60 ataques, 4 níveis, 5 repetições, cerca de 82 horas sem supervisão. Resultado: 1.200 capturas, 672,1 GB brutos e 220,4 GB de conjuntos de dados, publicados em um pacote de 16,9 GB.</p>
+          <p class="answers">Responde à QP3</p>
+        </div>
+      </li>
+      <li class="track-step open">
+        <span class="step-n">A B C</span>
+        <div>
+          <p class="venue">Em andamento, setembro a dezembro de 2026</p>
+          <h3>As evidências servem para quê, e onde valem?</h3>
+          <p>Três frentes usam o mesmo acervo: <strong>A</strong> verifica se os resultados se transferem para Kubernetes e para redes com latência real; <strong>B</strong> mede o que Snort, Suricata e Zeek detectam; <strong>C</strong> descobre quais atributos do tráfego carregam o sinal de cada família.</p>
+          <p class="answers">QP4, QP5 e QP6</p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ COMO FUNCIONA ============ -->
+<section class="sec sec-tint" id="como-funciona">
+  <div class="wrap">
+    <h2>Como funciona: do <code>attack.yaml</code> ao conjunto de dados</h2>
+    <p class="lead">O ataque é a unidade experimental. Cada um é um contêiner de propósito único, descrito por metadados que dizem o que ele faz, contra qual serviço, com quais parâmetros e qual técnica do MITRE ATT&amp;CK representa. O mesmo <em>pipeline</em> executa qualquer item do catálogo.</p>
+
+    <figure class="pipe" id="pipe">
+      <svg id="pipeSvg" viewBox="0 0 1100 300" role="img" aria-label="Pipeline do AttackZoo em sete etapas: especificação no attack.yaml, contêiner, orquestração, execução em três fases, captura pcap, três extratores em paralelo e conjunto de dados com relatório."></svg>
+      <figcaption>Uma execução atravessa o <em>pipeline</em>. Os três extratores trabalham em trilhas paralelas: suas linhas representam unidades diferentes (quadro, pacote, fluxo) e nunca são misturadas.</figcaption>
+    </figure>
+
+    <div class="grid-2 how">
+      <div>
+        <h3>Acrescentar um ataque em três passos</h3>
+        <ol class="steps">
+          <li>Criar o diretório <code>docker/attackers/novo-ataque/</code> com um <code>Dockerfile</code>.</li>
+          <li>Colocar a lógica do ataque no <code>entrypoint.sh</code>.</li>
+          <li>Declarar os metadados no <code>attack.yaml</code>. Na próxima execução, o catálogo o descobre sozinho.</li>
+        </ol>
+<pre class="code" aria-label="Trecho real do attack.yaml do SYN flood"><code><span class="k">id</span>: dos_syn_flood
+<span class="k">name</span>: SYN Flood
+<span class="k">category</span>: 6) Denial of Service and Impact
+<span class="k">max_runtime_s</span>: 10
+<span class="k">target_mapping</span>:
+  <span class="k">target</span>: target_ip
+  <span class="k">port</span>: target_port
+<span class="k">mitre</span>:
+- https://attack.mitre.org/tactics/TA0040/
+- https://attack.mitre.org/techniques/T1498/001/
+<span class="k">intensity_params</span>:
+- <span class="k">key</span>: rate_pps
+- <span class="k">key</span>: payload_size</code></pre>
+      </div>
+      <div>
+        <h3>Um experimento é uma tupla</h3>
+        <p class="formula">E = (C, P, B, I, R)</p>
+        <dl class="tuple">
+          <div><dt>C</dt><dd><b>Cenário</b>: ataque, alvo e topologia mínima.</dd></div>
+          <div><dt>P</dt><dd><b>Parâmetros</b>: taxa, duração, porta, alvo.</dd></div>
+          <div><dt>B</dt><dd><b>Linha de base benigna</b>: perfil de tráfego, clientes, intervalos.</dd></div>
+          <div><dt>I</dt><dd><b>Instrumentação</b>: captura, registros, artefatos gerados.</dd></div>
+          <div><dt>R</dt><dd><b>Repetição</b>: número de execuções e janelas de aquecimento e resfriamento.</dd></div>
+        </dl>
+        <h3>Critérios de aceitação de cada execução</h3>
+        <ul class="checks">
+          <li>Sondas com mais de 95% de sucesso no aquecimento.</li>
+          <li>Nenhuma perda de pacotes na interface de captura.</li>
+          <li>Serviço recuperado (95% ou mais de sucesso) no resfriamento.</li>
+        </ul>
+        <p class="note">Execuções que violam algum critério são sinalizadas e excluídas da agregação.</p>
+<pre class="code"><code><span class="c"># a CLI única substitui scripts avulsos</span>
+python attackzoo.py list
+python attackzoo.py experiment --attack dos_syn_flood \
+       --levels L0,L1,L2,L3 --runs 5
+python attackzoo.py features --extractors tshark,scapy,ntlflowlyzer
+python attackzoo.py dataset</code></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EXPERIMENTO POR DENTRO ============ -->
+<section class="sec" id="experimento">
+  <div class="wrap">
+    <h2>Um experimento por dentro: o SYN flood contra o servidor web</h2>
+    <p class="lead">Cada execução é uma série temporal com três fases. As sondas perguntam ao serviço, duas vezes por segundo, se ele responde e em quanto tempo. Escolha o nível e rode o experimento para ver a degradação aparecer só durante o ataque e desaparecer no resfriamento.</p>
+    <div class="sim">
+      <div class="sim-controls" role="group" aria-label="Controles do experimento">
+        <span class="sim-label" id="lvlLabel">Nível</span>
+        <div class="seg" role="radiogroup" aria-labelledby="lvlLabel">
+          <button type="button" role="radio" aria-checked="true" data-level="L0">L0, sem ataque</button>
+          <button type="button" role="radio" aria-checked="false" data-level="L3">L3, intensidade máxima</button>
+        </div>
+        <button type="button" class="btn" id="simRun">Executar experimento</button>
+      </div>
+      <canvas id="simCanvas" role="img" aria-label="Gráfico de latência das sondas ao longo de 240 segundos, com as fases de aquecimento, ataque e resfriamento."></canvas>
+      <div class="sim-read" aria-live="polite">
+        <div><span>Fase</span><b id="simPhase">pronto</b></div>
+        <div><span>Sucesso das sondas na fase</span><b id="simOk">–</b></div>
+        <div><span>Latência mediana na fase</span><b id="simMed">–</b></div>
+      </div>
+      <p class="note">Série ilustrativa, gerada a partir dos valores publicados no SBCUP 2026: em L0, 100% de sucesso e latência de poucos milissegundos em todas as fases; em L3, durante o ataque, 55,6% de sucesso, latência mediana de 1.275,74 ms e p95 e p99 perto de 2.002 ms (o limite de espera da sonda é 2 s). Aquecimento e resfriamento ficam próximos da linha de base, o que mostra que a degradação é localizada no tempo e atribuível ao ataque.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CATÁLOGO ============ -->
+<section class="sec sec-tint" id="catalogo">
+  <div class="wrap">
+    <h2>O catálogo: 60 ataques, 7 famílias, 9 serviços-alvo</h2>
+    <p class="lead">Serviços tradicionais e protocolos de IoT convivem no mesmo catálogo. Os alvos são um servidor web com PHP e banco de dados, SSH, Telnet, SMB, broker MQTT, servidor CoAP, agente XRCE-DDS, roteador Zenoh e um servidor web com TLS deliberadamente desatualizado. Filtre por família e toque em um ataque para ver seus metadados.</p>
+    <div class="filters" id="famFilters" role="group" aria-label="Filtrar por família"></div>
+    <div class="cat-layout">
+      <ul class="catalog" id="catalog" aria-label="Ataques do catálogo"></ul>
+      <aside class="detail" id="detail" aria-live="polite">
+        <p class="detail-empty">Selecione um ataque para ver descrição, alvo e mapeamento MITRE ATT&amp;CK.</p>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CAMPANHA ============ -->
+<section class="sec" id="campanha">
+  <div class="wrap">
+    <h2>A campanha: 1.200 capturas em cerca de 82 horas</h2>
+    <p class="lead">Cada linha da grade é um ataque; cada coluna, uma execução. São 4 níveis (L0 é o controle sem ataque) e 5 repetições por nível, com 60 s de aquecimento, 120 s de ataque e 60 s de resfriamento. A campanha rodou sem supervisão em um único hospedeiro (Ryzen 5 5600X, 16 GB), com travas de carga e de disco que nunca precisaram agir.</p>
+    <div class="camp">
+      <div class="camp-grid-wrap">
+        <div class="camp-cols" aria-hidden="true"><span>L0</span><span>L1</span><span>L2</span><span>L3</span></div>
+        <canvas id="campCanvas" role="img" aria-label="Grade de 60 ataques por 20 execuções sendo preenchida, uma captura por célula, até 1.200 capturas."></canvas>
+        <div class="camp-ctrl">
+          <button type="button" class="btn" id="campRun">Executar a campanha de novo</button>
+          <span class="mono" id="campClock">0 h de 82 h</span>
+          <span class="mono" id="campCount">0 de 1.200 capturas</span>
+        </div>
+      </div>
+      <dl class="camp-num">
+        <div><dt>Volume bruto</dt><dd>672,1 GB</dd></div>
+        <div><dt>Conjuntos de dados derivados</dt><dd>220,4 GB</dd></div>
+        <div><dt>Pacote público compactado</dt><dd>16,9 GB</dd></div>
+        <div><dt>Variação do tamanho de captura entre repetições</dt><dd>0,59%<small>mediana do coeficiente de variação (IQR 0,12% a 1,56%)</small></dd></div>
+        <div><dt>Variação do número de linhas</dt><dd>0,60%<small>IQR 0,15% a 1,87%</small></dd></div>
+      </dl>
+    </div>
+    <p class="note">Os valores de variação medem repetibilidade sob configuração fixa, e não semelhança com tráfego de produção. Inundações, abuso de protocolo IoT e interceptação dominam o volume; força bruta e exfiltração produzem pouco tráfego, o que mostra que a campanha não é dominada por um único padrão.</p>
+  </div>
+</section>
+
+<!-- ============ FRENTES ============ -->
+<section class="sec sec-tint" id="frentes">
+  <div class="wrap">
+    <h2>O que vem agora: três frentes sobre o mesmo acervo</h2>
+    <p class="lead">A campanha mostrou que o AttackZoo produz evidência em escala. Falta mostrar para que ela serve. As frentes correspondem aos usos do <em>testbed</em>: B o usa para testar detectores, C para caracterizar dados, e A verifica se esses resultados sobrevivem fora do laboratório.</p>
+
+    <div class="protocol">
+      <h3>Regra do jogo, congelada antes da análise</h3>
+      <p>As cinco repetições têm papéis fixos no protocolo analítico (versão 1.1). Nada da quinta repetição pode orientar seleção de atributos, limiares ou regras.</p>
+      <ol class="runs">
+        <li class="dev">run01<span>desenvolvimento</span></li>
+        <li class="dev">run02<span>desenvolvimento</span></li>
+        <li class="dev">run03<span>desenvolvimento</span></li>
+        <li class="val">run04<span>validação, no máximo uma correção</span></li>
+        <li class="lock">run05<span>teste protegido, aberto uma única vez</span></li>
+      </ol>
+    </div>
+
+    <div class="tabs" role="tablist" aria-label="Frentes de análise">
+      <button role="tab" id="tab-a" aria-controls="panel-a" aria-selected="true" type="button"><b>A</b> Transferência</button>
+      <button role="tab" id="tab-b" aria-controls="panel-b" aria-selected="false" type="button" tabindex="-1"><b>B</b> Detecção</button>
+      <button role="tab" id="tab-c" aria-controls="panel-c" aria-selected="false" type="button" tabindex="-1"><b>C</b> Atributos</button>
+    </div>
+
+    <!-- Frente A -->
+    <div class="panel" role="tabpanel" id="panel-a" aria-labelledby="tab-a">
+      <div class="grid-2">
+        <div class="prose">
+          <h3>Os resultados valem fora de um único hospedeiro?</h3>
+          <p>Tudo o que B e C produzem vem de contêineres em uma máquina, numa rede virtual sem latência nem perda. A frente A mede essa condicionante em vez de apenas declará-la, com dois braços.</p>
+          <p><strong>Portabilidade:</strong> a composição de contêineres foi convertida em manifestos Kubernetes (um <code>Deployment</code> e um <code>Service</code> por alvo, um <code>Job</code> por ataque, captura por contêiner auxiliar com <code>tcpdump</code>). Na verificação funcional, 49 dos 60 ataques chegaram ao ponto de captura.</p>
+          <p><strong>Emulação calibrada:</strong> o perfil de rede vem da matriz publicada de latências entre os 27 PoPs da Rede Ipê, onde opera o Cluster Nacional da RNP e o MENTORED. Nos 105 pares com nós do <em>cluster</em>, o RTT vai de 3 ms a 99 ms, com mediana de 30 ms. O <code>tc netem</code> reproduz esses valores entre os <em>pods</em>.</p>
+          <p class="status">Situação: manifestos verificados e perfil transcrito (729 células). A comparação estatística e o experimento de sensibilidade ainda não começaram. O piloto no MENTORED depende de acesso, com decisão marcada para 31/10/2026.</p>
+        </div>
+        <div>
+          <figure class="chart-fig">
+            <div class="stack" id="k8sStack"></div>
+            <ul class="legend" id="k8sLegend"></ul>
+            <figcaption>Situação dos 60 ataques na verificação funcional em Kubernetes. Inundações TCP sem conexão (FIN, PSH, RST) são descartadas pela regra <code>ctstate INVALID</code> do kube-proxy; o SYN flood com origem forjada ainda não foi observado no alvo.</figcaption>
+          </figure>
+          <figure class="rtt" id="rtt">
+            <div class="rtt-head">
+              <label for="rttRange">RTT emulado entre atacante e alvo</label>
+              <output id="rttOut" class="mono">30 ms</output>
+            </div>
+            <input type="range" id="rttRange" min="0" max="3" step="1" value="1" aria-describedby="rttDesc">
+            <div class="rtt-ticks" aria-hidden="true"><span>3 ms</span><span>30 ms</span><span>99 ms</span><span>173 ms</span></div>
+            <canvas id="rttCanvas" aria-hidden="true"></canvas>
+            <pre class="code small"><code id="rttCmd"></code></pre>
+            <p class="note" id="rttDesc">O RTT é aplicado em metades iguais, uma em cada <em>pod</em>. 3, 30 e 99 ms são o menor, o mediano e o maior RTT do recorte do <em>cluster</em>; 173 ms é um cenário de estresse com PoPs do Norte sem nó do <em>cluster</em>.</p>
+          </figure>
+        </div>
+      </div>
+    </div>
+
+    <!-- Frente B -->
+    <div class="panel" role="tabpanel" id="panel-b" aria-labelledby="tab-b" hidden>
+      <div class="grid-2">
+        <div class="prose">
+          <h3>O que Snort, Suricata e Zeek reconhecem dos 60 ataques?</h3>
+          <p>Os mesmos três motores que o pfSense integra são avaliados por reprodução <em>offline</em> das capturas, sem rede e com imagens fixadas por <em>digest</em>. Muda apenas o conjunto de regras, em três condições reportadas separadamente:</p>
+          <ol class="conds">
+            <li><code>clean_upstream_v1</code> Snort 3.10.0.0, Suricata 8.0.6 e Zeek 8.2.2 com regras públicas: o que um administrador obtém ao instalar.</li>
+            <li><code>iotedu_rules_v1</code> o mesmo ambiente com o conjunto institucional do GT-IoTEdu, congelado no <em>commit</em> <code>b64fa47a</code>: quanto o esforço institucional acrescenta.</li>
+            <li><strong>Ajustada</strong>: regras e políticas escritas do zero para até 14 lacunas (no máximo duas por família), rejeitadas se elevarem alertas no tráfego benigno.</li>
+          </ol>
+          <h4>O que conta como detecção</h4>
+          <p>Um evento só é ligado a um ataque se coincidir na janela temporal (tolerância de 1 s), nos pontos de extremidade e na semântica. Um registro <code>conn.log</code> do Zeek prova visibilidade, não detecção.</p>
+          <h4>Por que um ataque não foi detectado?</h4>
+          <ol class="causes">
+            <li>O tráfego do ataque nem está na captura (verificado primeiro).</li>
+            <li>Não existe regra correspondente.</li>
+            <li>A regra existe, mas não dispara.</li>
+            <li>A regra dispara com rótulo errado: parece cobertura, mas não é.</li>
+          </ol>
+        </div>
+        <div>
+          <figure class="chart-fig">
+            <h4 class="fig-title">Piloto: 12 ataques, 3 motores, 36 tarefas</h4>
+            <div class="funnel" id="funnel"></div>
+            <figcaption>Do volume ao sinal. 99,99% dos eventos eram de decodificador ou diagnóstico (<em>checksum</em> inválido, <em>loopback</em>, avisos de captura). Volume de alertas não é cobertura.</figcaption>
+          </figure>
+          <figure class="chart-fig">
+            <div class="outcomes" id="outcomes"></div>
+            <figcaption>Desfecho de cada par ataque e motor no piloto (L1, run01). As duas detecções específicas são da varredura agressiva de portas, no Snort e no Suricata. O piloto valida o executor e o <em>parser</em>; não estima cobertura.</figcaption>
+          </figure>
+          <table class="tbl">
+            <caption>Inventário do conjunto institucional no <em>commit</em> <code>b64fa47a</code></caption>
+            <thead><tr><th scope="col">Motor</th><th scope="col">Arquivos</th><th scope="col">Ativas</th><th scope="col">Desativadas</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Snort</th><td>39</td><td>231</td><td>11</td></tr>
+              <tr><th scope="row">Suricata</th><td>39</td><td>224</td><td>7</td></tr>
+              <tr><th scope="row">Zeek (<code>Notice::Type</code>)</th><td>50</td><td>145</td><td>–</td></tr>
+              <tr class="tot"><th scope="row">Total</th><td>128</td><td>600</td><td>18</td></tr>
+            </tbody>
+          </table>
+          <p class="note">O grupo declara 538 regras; a diferença para 600 ainda será reconciliada. O inventário também achou 14 <code>sid</code> duplicados dentro do mesmo motor, registrados como defeitos.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Frente C -->
+    <div class="panel" role="tabpanel" id="panel-c" aria-labelledby="tab-c" hidden>
+      <div class="grid-2">
+        <div class="prose">
+          <h3>Quais grandezas do tráfego carregam o sinal de cada família?</h3>
+          <p>A frente é diagnóstica, não preditiva: o produto é um mapa de quais atributos distinguem ataque de tráfego benigno, e não um classificador de intrusão. Os modelos servem de instrumento de medida.</p>
+          <p>A comparação usa uma <strong>campanha benigna independente</strong>, pareada por serviço: 9 serviços, 3 perfis de carga e 5 repetições, 135 casos e 405 saídas de extração auditadas por SHA-256. Endereços, <em>timestamps</em> e identificadores de cenário são removidos antes da seleção, para que o modelo não "decore" o experimento.</p>
+          <p>A seleção combina informação mútua, mRMR e importância por permutação em uma floresta aleatória (300 árvores). A estabilidade é medida pelos índices de Jaccard e Kuncheva: um atributo só é estável se aparecer no top-k em pelo menos três das quatro primeiras repetições.</p>
+          <p class="status">Resultado preliminar: na validação (run04), subconjuntos de 5 atributos do NTLFlowLyzer preservaram o desempenho do espaço completo (212 a 286 atributos), com perda máxima de 0,0156 em acurácia balanceada. Valores perto de 1 sugerem separação fácil diante de um controle benigno pouco diverso; um controle de trivialidade está previsto.</p>
+        </div>
+        <div>
+          <figure class="chart-fig">
+            <h4 class="fig-title">Cobertura do recorte por família</h4>
+            <div class="cov" id="coverage"></div>
+            <figcaption>Pares ataque e extrator possíveis, elegíveis à rotulagem restritiva e efetivamente analisáveis. Hoje: 59 pares, 22 ataques de 4 famílias. A indisponibilidade fica no denominador; não é tratada como ausência de sinal.</figcaption>
+          </figure>
+          <table class="tbl">
+            <caption>Métricas preliminares em run04, por extrator</caption>
+            <thead><tr><th scope="col">Extrator</th><th scope="col">Pares</th><th scope="col">Acur. bal.</th><th scope="col">Macro-F1</th><th scope="col">MCC</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">NTLFlowLyzer</th><td>15</td><td>0,9989</td><td>0,9993</td><td>0,9986</td></tr>
+              <tr><th scope="row">Scapy</th><td>22</td><td>0,8598</td><td>0,8567</td><td>0,7420</td></tr>
+              <tr><th scope="row">TShark</th><td>22</td><td>0,8598</td><td>0,8567</td><td>0,7420</td></tr>
+            </tbody>
+          </table>
+          <p class="note">Scapy e TShark coincidem porque, após os filtros, só restou o comprimento do quadro (<code>frame_len</code>, <code>frame.len</code>). Nos dois ataques MQTT, a acurácia balanceada média foi de 0,5601; no caso CoAP, 1,0000. O enriquecimento desses esquemas será avaliado antes de abrir run05.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="joint">
+      <h3>A leitura conjunta de B e C</h3>
+      <p class="lead">A principal contribuição analítica esperada nasce do cruzamento. Atributos dizem se o sinal existe no tráfego; detectores dizem se alguém o reconhece; a frente A diz se essa resposta resiste a outra rede.</p>
+      <div class="matrix" role="table" aria-label="Interpretação conjunta: sinal nos atributos versus detecção pelos motores">
+        <div class="m-axis m-y" role="presentation">Sinal nos atributos</div>
+        <div class="m-axis m-x" role="presentation">Detecção pelos motores</div>
+        <div class="m-lab m-lab-y1" role="presentation">alto</div>
+        <div class="m-lab m-lab-y2" role="presentation">baixo</div>
+        <div class="m-lab m-lab-x1" role="presentation">alta</div>
+        <div class="m-lab m-lab-x2" role="presentation">baixa</div>
+        <div class="m-cell q1" role="row"><b role="cell">Bem coberta</b><span role="cell">O recorte de instrumentação e o conjunto de regras estão adequados.</span></div>
+        <div class="m-cell q2" role="row"><b role="cell">Lacuna de assinatura</b><span role="cell">O sinal existe no tráfego, mas os motores não o exploram na configuração avaliada.</span></div>
+        <div class="m-cell q3" role="row"><b role="cell">Detecção por outro caminho</b><span role="cell">Os motores usam carga útil ou estado de aplicação que os atributos não capturam.</span></div>
+        <div class="m-cell q4" role="row"><b role="cell">Limite da instrumentação</b><span role="cell">Pede novos extratores, outros pontos de captura ou cargas benignas mais representativas.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUESTÕES ============ -->
+<section class="sec" id="questoes">
+  <div class="wrap">
+    <h2>Seis questões de pesquisa: três respondidas, três abertas</h2>
+    <ul class="qps">
+      <li class="qp done"><span class="qp-id">QP1</span><p>Qual plataforma de gateway melhor atende a uma rede IoT de campus automatizada?</p><span class="qp-st">Respondida: pfSense (ERRC 2025)</span></li>
+      <li class="qp done"><span class="qp-id">QP2</span><p>Como estruturar um <em>testbed</em> que separe a especificação declarativa da orquestração e cresça sem mudar o núcleo?</p><span class="qp-st">Respondida: arquitetura e tupla E (SBCUP 2026)</span></li>
+      <li class="qp done"><span class="qp-id">QP3</span><p>O <em>testbed</em> sustenta uma campanha em escala de catálogo com artefatos rastreáveis e comparáveis?</p><span class="qp-st">Respondida: 1.200 capturas, CV mediano &lt; 0,6% (SBSeg 2026)</span></li>
+      <li class="qp open"><span class="qp-id">QP4</span><p>Os resultados se transferem para <em>cluster</em> e para condições de latência, perda e vazão de uma rede real?</p><span class="qp-st">Frente A: verificação funcional feita</span></li>
+      <li class="qp open"><span class="qp-id">QP5</span><p>Qual a cobertura de Snort, Suricata e Zeek sobre os 60 ataques, e quanto o conjunto institucional acrescenta?</p><span class="qp-st">Frente B: piloto e inventário feitos</span></li>
+      <li class="qp open"><span class="qp-id">QP6</span><p>Quais atributos melhor discriminam cada família, e quão estável é essa seleção?</p><span class="qp-st">Frente C: seleção validada em run04</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ LIMITES ============ -->
+<section class="sec sec-tint" id="limites">
+  <div class="wrap">
+    <h2>O que o trabalho não afirma</h2>
+    <p class="lead">As limitações são declaradas desde já, e parte delas vira objeto de medida.</p>
+    <ul class="limits">
+      <li><h3>Fidelidade</h3><p>Contêineres não reproduzem interferência sem fio, filas de hardware, <em>jitter</em> de longa distância nem amplificação em escala de Internet. Ataques volumétricos são cenários controlados de degradação. A frente A mede parte disso; não elimina.</p></li>
+      <li><h3>Tráfego benigno</h3><p>A campanha original não teve clientes benignos: L0 é só ausência de ataque. A campanha benigna independente ajuda, mas não tem a diversidade humana de uma rede de produção.</p></li>
+      <li><h3>Hospedeiro único</h3><p>Todos os valores dependentes de hardware vêm de uma máquina. Em ataques de alta carga, a contenção de CPU e E/S pode afetar temporização e perda.</p></li>
+      <li><h3>Formato de captura</h3><p>As capturas usam o enlace <code>DLT_LINUX_SLL2</code>: a trilha NTLFlowLyzer publicada ficou vazia, e o Snort exige conversão com MAC sintético. A correção e um pacote revisado estão pendentes.</p></li>
+      <li><h3>Regras institucionais</h3><p>O repositório do GT-IoTEdu é privado: a condição <code>iotedu_rules_v1</code> está congelada e documentada, mas terceiros não podem reexecutá-la. Todo o resto é público.</p></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ CRONOGRAMA ============ -->
+<section class="sec" id="cronograma">
+  <div class="wrap">
+    <h2>Cronograma: quatro marcos até o depósito</h2>
+    <p class="lead">São 28 atividades em quatro blocos (A, B, C e um bloco transversal de redação), com cortes de escopo decididos antes, e não sob pressão de prazo. A condição de base da frente B está no caminho crítico.</p>
+    <div class="timeline" id="timeline">
+      <div class="tl-bar"><div class="tl-today" id="tlToday"><span>hoje</span></div></div>
+      <ol class="tl-marks">
+        <li style="--x:0%"><b>M1</b><time datetime="2026-09-30">30/09</time><p>Atributos selecionados e validados; ambiente de detecção definido e piloto executado; inventário das regras institucionais. Parcialmente atingido.</p></li>
+        <li style="--x:33.3%"><b>M2</b><time datetime="2026-10-31">31/10</time><p>Ambiente de detecção congelado; manifestos e perfil de rede fechados; matriz de base iniciada; decisão sobre o MENTORED.</p></li>
+        <li style="--x:66.6%"><b>M3</b><time datetime="2026-11-30">30/11</time><p>Cobertura de base dos 60 ataques; condição institucional executada; não detecções diagnosticadas; congelamento geral.</p></li>
+        <li style="--x:100%"><b>M4</b><time datetime="2026-12-31">31/12</time><p>run05 aberto uma única vez em cada frente; análise integrada de lacunas; dissertação revisada para depósito.</p></li>
+      </ol>
+    </div>
+    <table class="tbl decisions">
+      <caption>Pontos de decisão datados</caption>
+      <thead><tr><th scope="col">Data</th><th scope="col">Decisão</th><th scope="col">Se o critério não for atendido</th></tr></thead>
+      <tbody>
+        <tr><td>31/10/2026</td><td>Piloto no MENTORED</td><td>A QP4 é respondida pelo braço local com emulação calibrada, e o pacote de implantação fica pronto para execução futura.</td></tr>
+        <tr><td>31/10/2026</td><td>Mapeamento automático entre regras e ataques</td><td>Se cobrir menos da metade das regras, o resto é mapeado à mão só para os ataques do catálogo.</td></tr>
+        <tr><td>15/11/2026</td><td>Escopo da autoria de regras</td><td>Mais de 14 lacunas: prioriza uma por família, a de maior cobertura MITRE.</td></tr>
+        <tr><td>30/11/2026</td><td>Congelamento geral</td><td>Nenhuma alteração em <em>pipeline</em>, regras ou transformadores; qualquer correção posterior é desvio documentado.</td></tr>
+        <tr><td>15/12/2026</td><td>Corte final de escopo</td><td>O que não estiver pronto vira trabalho futuro declarado. Redação e defesa não são cortadas.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ MATERIAIS ============ -->
+<section class="sec sec-tint" id="materiais">
+  <div class="wrap grid-2">
+    <div>
+      <h2>Publicações</h2>
+      <ol class="pubs">
+        <li><p class="venue">ERRC 2025, p. 47–53</p><p class="pt"><a href="https://doi.org/10.5753/errc.2025.17739">IoTEdu: Network Services for the Automated Management of Campus Internet-of-Things Networks</a></p><p class="au">Bitzki, L.; Kreutz, D.; Bertholdo, L.</p></li>
+        <li><p class="venue">SBCUP 2026, CSBC, p. 290–302</p><p class="pt"><a href="https://doi.org/10.5753/sbcup.2026.23835">NetSecBed: A Container-Native Testbed for Reproducible Cybersecurity Experimentation</a></p><p class="au">Bitzki, L.; Kreutz, D.; Heinrich, T.; Bertholdo, L.; Quincozes, S.; Fideles, D.; Nogueira, A.</p></li>
+        <li><p class="venue">SBSeg 2026, Salão de Ferramentas, p. 109–118</p><p class="pt"><a href="https://doi.org/10.5753/sbseg_estendido.2026.33492">AttackZoo: A Reproducible Testbed for Attack Execution and Network Traffic Dataset Generation</a></p><p class="au">Bitzki, L.; Kreutz, D.; Bertholdo, L.; Kapelinski, C.</p></li>
+      </ol>
+      <h2 class="mt">Artefatos abertos</h2>
+      <ul class="links">
+        <li><a href="https://github.com/GT-IoTEdu/attackzoo-sbseg26">Código do AttackZoo (versão SBSeg 2026)</a></li>
+        <li><a href="https://github.com/GT-IoTEdu/sbcup2026-ataques">Código na versão SBCUP 2026 (NetSecBed)</a></li>
+        <li><a href="https://doi.org/10.6084/m9.figshare.33023765">Pacote de conjuntos de dados da campanha (figshare, 16,9 GB)</a></li>
+        <li><a href="https://gt-iotedu.github.io">Grupo de Trabalho IoTEdu da RNP</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Banca examinadora</h2>
+      <ul class="banca">
+        <li><b>Prof. Dr. Diego Kreutz</b><span>Orientador, UNIPAMPA</span></li>
+        <li><b>Prof. Dr. Leandro Márcio Bertholdo</b><span>Coorientador, UFRGS</span></li>
+        <li><b>Me. Davi Daniel Gemmer</b><span>RNP</span></li>
+        <li><b>Dr. João Otávio Chervinski</b><span>Monash University</span></li>
+        <li><b>Prof. Dr. Marcelo Caggiani Luizelli</b><span>UNIPAMPA</span></li>
+        <li><b>Me. Rildo Souza</b><span>CAIS/RNP</span></li>
+        <li><b>Me. Sidnei Barbieri</b><span>ITA</span></li>
+        <li><b>Prof. Dr. Silvio Ereno Quincozes</b><span>UNIPAMPA</span></li>
+      </ul>
+      <h2 class="mt">Para a banca levar</h2>
+      <p class="prose">O resultado pretendido é uma cadeia aberta que vai da decisão de infraestrutura à avaliação empírica de detecção, com as condições de validade declaradas e os artefatos intermediários preservados e reexecutáveis por terceiros, com exceção da condição institucional de regras.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-inner">
+    <p>Leonardo de Jesus Bitzki, Programa de Pós-Graduação em Engenharia de Software (PPGES), Universidade Federal do Pampa. AI Horizon Labs e GT-IoTEdu/RNP.</p>
+    <p>Execute ataques apenas contra alvos de laboratório ou dispositivos sob sua autorização.</p>
+  </div>
+</footer>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/lab.js"></script>
+<script src="assets/js/site.js"></script>
+</body>
+</html>
