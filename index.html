@@ -55,17 +55,71 @@
   </div>
 
   <div class="wrap">
+    <figure class="arch" id="arquitetura">
+      <h2 class="arch-title">A solução em uma figura</h2>
+      <ol class="arch-flow">
+        <li class="arch-stage">
+          <p class="arch-step">Especificar</p>
+          <h3>Repositório de artefatos</h3>
+          <ul>
+            <li><b>60</b> atacantes, um contêiner cada, descritos por <code>attack.yaml</code></li>
+            <li><b>9</b> serviços-alvo: Web, SSH, Telnet, SMB, MQTT, CoAP, XRCE-DDS, Zenoh, TLS legado</li>
+            <li><b>2</b> modelos de cliente benigno parametrizáveis</li>
+          </ul>
+        </li>
+        <li class="arch-stage">
+          <p class="arch-step">Operar</p>
+          <h3>Camada de operação</h3>
+          <ul>
+            <li>CLI única <code>attackzoo.py</code></li>
+            <li>Catálogo descoberto sozinho a partir dos metadados</li>
+            <li>Entrada: alvo, ataques, níveis, repetições, duração das fases</li>
+          </ul>
+        </li>
+        <li class="arch-stage">
+          <p class="arch-step">Executar e registrar</p>
+          <h3>Orquestração e instrumentação</h3>
+          <ul>
+            <li>Matriz serviço × ataque × nível × repetição</li>
+            <li>Cada execução: aquecimento 60 s, ataque 120 s, resfriamento 60 s</li>
+            <li>Em paralelo: captura <code>tcpdump</code>, sondas a cada 0,5 s, telemetria e registros</li>
+          </ul>
+          <p class="arch-out" style="--c:var(--signal)">Evidência bruta</p>
+        </li>
+        <li class="arch-stage">
+          <p class="arch-step">Derivar</p>
+          <h3>Artefatos derivados</h3>
+          <ul>
+            <li>Três trilhas de extração separadas: TShark (quadros), Scapy (pacotes), NTLFlowLyzer (fluxos)</li>
+            <li>Conjuntos de dados, relatórios e metadados de cada execução</li>
+          </ul>
+          <p class="arch-out" style="--c:var(--f1)">Evidência derivada</p>
+        </li>
+        <li class="arch-stage arch-use">
+          <p class="arch-step">Usar</p>
+          <h3>Três usos, três frentes</h3>
+          <ul>
+            <li><b>B</b> testar detectores: Snort, Suricata, Zeek</li>
+            <li><b>C</b> caracterizar dados: atributos por família</li>
+            <li><b>A</b> transferir: Kubernetes e rede emulada</li>
+          </ul>
+          <p class="arch-out" style="--c:var(--f7)">Interpretação</p>
+        </li>
+      </ol>
+      <figcaption>Arquitetura do AttackZoo. A especificação declarativa (à esquerda) fica separada da orquestração: um ataque novo entra no repositório sem alterar as etapas seguintes. Os alvos podem ser contêineres, serviços do hospedeiro ou dispositivos reais incluídos de propósito na rede de laboratório.</figcaption>
+    </figure>
+
     <figure class="lab" id="lab">
-      <canvas id="labCanvas" aria-label="Animação de um experimento do AttackZoo: contêineres atacantes enviam pacotes pela ponte Docker aos serviços-alvo, enquanto o tcpdump grava a captura e as sondas medem a disponibilidade." role="img"></canvas>
+      <canvas id="labCanvas" aria-label="Painel animado de uma execução do AttackZoo: as fases de aquecimento, ataque e resfriamento avançam, a captura cresce e as sondas registram a disponibilidade do serviço-alvo." role="img"></canvas>
       <div class="lab-hud" aria-live="polite">
         <div class="hud-cell"><span class="hud-k">Ataque</span><span class="hud-v mono" id="hudAttack">dos_syn_flood</span></div>
         <div class="hud-cell"><span class="hud-k">Família</span><span class="hud-v" id="hudFamily">Negação de serviço</span></div>
         <div class="hud-cell"><span class="hud-k">Fase</span><span class="hud-v" id="hudPhase">aquecimento</span></div>
         <div class="hud-cell"><span class="hud-k">Relógio do experimento</span><span class="hud-v mono" id="hudClock">00:00 / 04:00</span></div>
-        <div class="hud-cell"><span class="hud-k">Pacotes no pcap</span><span class="hud-v mono" id="hudPkts">0</span></div>
+        <div class="hud-cell"><span class="hud-k">Sondas com resposta</span><span class="hud-v mono" id="hudPkts">100%</span></div>
         <button class="hud-btn" id="labPause" type="button" aria-pressed="false">Pausar animação</button>
       </div>
-      <figcaption>Simulação ilustrativa do ciclo real do AttackZoo, acelerada 12 vezes: 60 s de aquecimento, 120 s de ataque e 60 s de resfriamento, com sondas de disponibilidade a cada 0,5 s. As cores seguem as sete famílias do catálogo.</figcaption>
+      <figcaption>O que o AttackZoo registra em cada execução, acelerado 12 vezes: 60 s de aquecimento, 120 s de ataque e 60 s de resfriamento, com sondas de disponibilidade a cada 0,5 s. Cada execução vira uma série temporal rotulada por fase. Simulação ilustrativa; as cores seguem as famílias do catálogo.</figcaption>
     </figure>
   </div>
 
@@ -185,11 +239,6 @@
   <div class="wrap">
     <h2>Como funciona: do <code>attack.yaml</code> ao conjunto de dados</h2>
     <p class="lead">O ataque é a unidade experimental. Cada um é um contêiner de propósito único, descrito por metadados que dizem o que ele faz, contra qual serviço, com quais parâmetros e qual técnica do MITRE ATT&amp;CK representa. O mesmo <em>pipeline</em> executa qualquer item do catálogo.</p>
-
-    <figure class="pipe" id="pipe">
-      <svg id="pipeSvg" viewBox="0 0 1100 300" role="img" aria-label="Pipeline do AttackZoo em sete etapas: especificação no attack.yaml, contêiner, orquestração, execução em três fases, captura pcap, três extratores em paralelo e conjunto de dados com relatório."></svg>
-      <figcaption>Uma execução atravessa o <em>pipeline</em>. Os três extratores trabalham em trilhas paralelas: suas linhas representam unidades diferentes (quadro, pacote, fluxo) e nunca são misturadas.</figcaption>
-    </figure>
 
     <div class="grid-2 how">
       <div>
