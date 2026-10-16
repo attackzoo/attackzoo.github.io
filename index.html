@@ -43,6 +43,9 @@
   </div>
 </header>
 
+<noscript><div class="caps-banner" role="alert"><div class="wrap"><strong>JavaScript está desativado.</strong> O texto do site continua legível, mas o catálogo interativo, os gráficos e as animações não serão exibidos. Ative o JavaScript neste site para ver tudo.</div></div></noscript>
+<div class="caps-banner" id="capsBanner" role="alert" hidden></div>
+
 <main id="conteudo">
 
 <!-- ============ HERO ============ -->
@@ -282,7 +285,7 @@ python attackzoo.py dataset</code></pre>
 <section class="sec" id="experimento">
   <div class="wrap">
     <h2>Um experimento por dentro: o SYN flood contra o servidor web</h2>
-    <p class="lead">Cada execução é uma série temporal com três fases. As sondas perguntam ao serviço, duas vezes por segundo, se ele responde e em quanto tempo. Escolha o nível e rode o experimento para ver a degradação aparecer só durante o ataque e desaparecer no resfriamento.</p>
+    <p class="lead">Cada execução é uma série temporal com três fases. As sondas perguntam ao serviço, duas vezes por segundo, se ele responde e em quanto tempo. Compare os níveis: a degradação aparece só na janela de ataque e some no resfriamento.</p>
     <div class="sim">
       <div class="sim-controls" role="group" aria-label="Controles do experimento">
         <span class="sim-label" id="lvlLabel">Nível</span>
@@ -290,13 +293,12 @@ python attackzoo.py dataset</code></pre>
           <button type="button" role="radio" aria-checked="true" data-level="L0">L0, sem ataque</button>
           <button type="button" role="radio" aria-checked="false" data-level="L3">L3, intensidade máxima</button>
         </div>
-        <button type="button" class="btn" id="simRun">Executar experimento</button>
       </div>
       <canvas id="simCanvas" role="img" aria-label="Gráfico de latência das sondas ao longo de 240 segundos, com as fases de aquecimento, ataque e resfriamento."></canvas>
       <div class="sim-read" aria-live="polite">
-        <div><span>Fase</span><b id="simPhase">pronto</b></div>
-        <div><span>Sucesso das sondas na fase</span><b id="simOk">–</b></div>
-        <div><span>Latência mediana na fase</span><b id="simMed">–</b></div>
+        <div><span>Sucesso das sondas no ataque</span><b id="simOk">100%</b></div>
+        <div><span>Latência mediana no ataque</span><b id="simMed">poucos ms</b></div>
+        <div><span>p95 e p99 no ataque</span><b id="simTail">poucos ms</b></div>
       </div>
       <p class="note">Série ilustrativa, gerada a partir dos valores publicados no SBCUP 2026: em L0, 100% de sucesso e latência de poucos milissegundos em todas as fases; em L3, durante o ataque, 55,6% de sucesso, latência mediana de 1.275,74 ms e p95 e p99 perto de 2.002 ms (o limite de espera da sonda é 2 s). Aquecimento e resfriamento ficam próximos da linha de base, o que mostra que a degradação é localizada no tempo e atribuível ao ataque.</p>
     </div>

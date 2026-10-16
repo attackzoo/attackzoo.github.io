@@ -423,3 +423,12 @@ em { font-style: italic; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
+
+/* Aviso de recursos do navegador */
+.caps-banner { background: color-mix(in srgb, var(--signal) 22%, var(--paper)); background: #F6E3B8; color: #14232D; border-bottom: 2px solid var(--signal); font-family: var(--font-ui); font-size: .95rem; padding: 12px 0; }
+.caps-banner .wrap { display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap; }
+.caps-banner ul { margin: 4px 0 0; padding-left: 1.2em; }
+.caps-banner .caps-text { flex: 1; min-width: 240px; }
+.caps-banner button { font-family: var(--font-ui); font-weight: 600; border: 1.5px solid #14232D; background: transparent; color: #14232D; border-radius: 6px; padding: 6px 12px; cursor: pointer; }
+.caps-fallback { border: 1.5px dashed var(--ink-3); border-radius: 8px; padding: 16px; font-family: var(--font-ui); font-size: .95rem; color: var(--ink-2); background: var(--card); }
+.caps-fallback strong { color: var(--ink); }
